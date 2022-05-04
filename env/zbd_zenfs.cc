@@ -612,8 +612,8 @@ IOStatus SubZonedBlockDevice::Open(bool readonly) {
   gc_log_file_ = fopen(sstr_gc.str().c_str(), "w");
   assert(NULL != gc_log_file_);
 
-  fprintf(gc_log_file_, "%-10s%-10s%-8s%-8.2s\n", "TIME(ms)",
-           "STATUS", "ZONE NR", "INVALID(%)");
+  fprintf(gc_log_file_, "%-10s%-10s%-8s%-8s\n", "TIME(ms)",
+           "STATUS", "ZONE NR", "INVAL(%)");
   fflush(gc_log_file_);
 //alloc_log
   alloc_log_file_ = fopen(sstr_alloc.str().c_str(), "w");
@@ -720,12 +720,6 @@ void SubZonedBlockDevice::GarbageCollectionThread() {
                 (long int)((double)clock() / CLOCKS_PER_SEC * 1000), "FORCED",
                 GetNrZones(), GetEmptyZones());
         fflush(zone_log_file_);
-//gc_log
-        fprintf(gc_log_file_, "%-10ld%-8s%-8u%-8u\n",
-                (long int)((double)clock() / CLOCKS_PER_SEC * 1000), "FORCED",
-                GetNrZones(), GetEmptyZones());
-        fflush(gc_log_file_);
-      }
 #endif
       active_gc_++;
       ret = GarbageCollection(is_trigger, Env::WLTH_NONE, gc_force_,
