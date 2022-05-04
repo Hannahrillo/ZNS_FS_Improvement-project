@@ -248,6 +248,10 @@ class SubZonedBlockDevice{
     uint64_t reset_rate_limiter_;
 
     FILE *zone_log_file_;
+    //gc_log, alloc_log
+    FILE *gc_log_file_;
+    FILE *alloc_log_file_;
+  
     char *gc_buffer_;
 
     unsigned int max_nr_active_io_zones_;
