@@ -612,8 +612,8 @@ IOStatus SubZonedBlockDevice::Open(bool readonly) {
   gc_log_file_ = fopen(sstr_gc.str().c_str(), "w");
   assert(NULL != gc_log_file_);
 
-  fprintf(gc_log_file_, "%-10s%-8s%-8s%-45s%-10s%-10s\n", "TIME(ms)",
-           "ZONE(-)", "ZONE(+)", "FILE NAME", "WRITE", "FILE SIZE");
+  fprintf(gc_log_file_, "%-10s%-10s%-8s%-8.2s\n", "TIME(ms)",
+           "STATUS", "ZONE NR", "INVALID(%)");
   fflush(gc_log_file_);
 //alloc_log
   alloc_log_file_ = fopen(sstr_alloc.str().c_str(), "w");
@@ -841,9 +841,9 @@ uint32_t SubZonedBlockDevice::GarbageCollection(
                 (GetNrZones() * (double)(invalid_level + 1) / 20));
         fflush(zone_log_file_);
       }
-      //new_log
+      //gc_log
       if (gc_log_file_) {
-        fprintf(gc_log_file_, "%-10ld%-8s%-lu%-8.2lf\n",
+        fprintf(gc_log_file_, "%-10ld%-10s%-8lu%-8.2lf\n",
                 (long int)((double)clock() / CLOCKS_PER_SEC * 1000), "GC_Start",
                 victim->GetZoneNr(),
                 victim->GetInvalidPercentage());
@@ -859,9 +859,9 @@ uint32_t SubZonedBlockDevice::GarbageCollection(
                 victim->GetZoneNr());
         fflush(zone_log_file_);
       }
-      //new_log
+      //gc_log
       if (gc_log_file_) {
-        fprintf(gc_log_file_, "%-10ld%-8s%-8lu\n",
+        fprintf(gc_log_file_, "%-10ld%-10s%-8lu\n",
                 (long int)((double)clock() / CLOCKS_PER_SEC * 1000), "GC_End",
                 victim->GetZoneNr());
         fflush(gc_log_file_);
