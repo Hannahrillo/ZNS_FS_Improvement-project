@@ -619,7 +619,7 @@ IOStatus SubZonedBlockDevice::Open(bool readonly) {
   alloc_log_file_ = fopen(sstr_alloc.str().c_str(), "w");
   assert(NULL != alloc_log_file_);
 
-  fprintf(alloc_log_file_, "%-10ld%-8lu%-45s%-10lu%-10u\n", "TIME(ms)",
+  fprintf(alloc_log_file_, "%-10s%-8s%-45s%-10s%-10s\n", "TIME(ms)",
            "ZONE NR","FILE NAME", "FILE SIZE", "FREE SPACE");
   fflush(alloc_log_file_);
 #endif
