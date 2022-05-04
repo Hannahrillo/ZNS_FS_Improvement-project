@@ -525,7 +525,7 @@ SubZonedBlockDevice::SubZonedBlockDevice(std::string bdevname,
   zone_log_file_ = nullptr;
 //gc_log, alloc_log
   gc_log_file_ = nullptr;
-  alloc_log_file = nullptr;
+  alloc_log_file_ = nullptr;
 
 
 #ifndef INDEPENDENT_GC_THREAD
@@ -595,8 +595,9 @@ IOStatus SubZonedBlockDevice::Open(bool readonly) {
 #else
   sstr <<bdevname_<< "_zone_e" << ZONE_RESET_TRIGGER << "_unknown.log";
 #endif
-//new_log
-  sstr_ <<bdevname_<< "_zone_e" << ZONE_RESET_TRIGGER << "_GC.log";
+//gc_log, alloc_log
+  sstr_gc <<bdevname_<< "_zone_e" << ZONE_RESET_TRIGGER << "_GC.log";
+  sstr_alloc <<bdevname_<< "_zone_e" << ZONE_RESET_TRIGGER << "_ZoneAlloc.log";
 
 #ifdef ZONE_CUSTOM_DEBUG
   zone_log_file_ = fopen(sstr.str().c_str(), "w");
@@ -611,14 +612,14 @@ IOStatus SubZonedBlockDevice::Open(bool readonly) {
   gc_log_file_ = fopen(sstr_.str().c_str(), "w");
   assert(NULL != gc_log_file_);
 
-  fprintf(gc_log_file_, "%-10s%-8s%-8s%-45s%-10s%-10s%\n", "TIME(ms)",
+  fprintf(gc_log_file_, "%-10s%-8s%-8s%-45s%-10s%-10s\n", "TIME(ms)",
            "ZONE(-)", "ZONE(+)", "FILE NAME", "WRITE", "FILE SIZE");
   fflush(gc_log_file_);
 //alloc_log
   alloc_log_file_ = fopen(sstr_.str().c_str(), "w");
   assert(NULL != alloc_log_file_);
 
-  fprintf(alloc_log_file_, "%-10s%-8s%-8s%-45s%-10s%-10s%\n", "TIME(ms)",
+  fprintf(alloc_log_file_, "%-10s%-8s%-8s%-45s%-10s%-10s\n", "TIME(ms)",
            "ZONE(-)", "ZONE(+)", "FILE NAME", "WRITE", "FILE SIZE");
   fflush(alloc_log_file_);
 #endif
@@ -1487,7 +1488,7 @@ Zone *SubZonedBlockDevice::AllocateZone(Env::WriteLifeTimeHint lifetime,
 #ifdef ZONE_CUSTOM_DEBUG
   assert(nullptr != zone_log_file_);
   //alloc_log
-  assert(nullptr != alloc_log_file_)
+  assert(nullptr != alloc_log_file_);
 #endif
 
   zone = AllocateZone(lifetime, zone_file);
@@ -1500,7 +1501,7 @@ Zone *SubZonedBlockDevice::AllocateZone(Env::WriteLifeTimeHint lifetime,
             (unsigned int)zone_file->GetWriteLifeTimeHint());
     fflush(zone_log_file_);
     //alloc_log
-    fprintf(alloc_log_file_, "%-10ld%-8s%-8d%-8lu%-45s%-10u%-10lu%-10u\n",
+    fprintf(alloc_log_file_, "%-10ld%-8s%-8d%-8lu%-45s%-10u%-10lu\n",
             (long int)((double)clock() / CLOCKS_PER_SEC * 1000), "NEW", 0,
             zone->GetZoneNr(), zone_file->GetFilename().c_str(), 0,
             zone_file->GetFileSize());
