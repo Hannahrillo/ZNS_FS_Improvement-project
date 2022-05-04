@@ -619,8 +619,8 @@ IOStatus SubZonedBlockDevice::Open(bool readonly) {
   alloc_log_file_ = fopen(sstr_alloc.str().c_str(), "w");
   assert(NULL != alloc_log_file_);
 
-  fprintf(alloc_log_file_, "%-10s%-8s%-45s%-10s%-10s\n", "TIME(ms)",
-           "ZONE NR","FILE NAME", "FILE SIZE", "FREE SPACE");
+  fprintf(alloc_log_file_, "%-10s%-8s%-8s%-45s%-10s%-10s\n", "TIME(ms)",
+           "ZONE(-)", "ZONE(+)", "FILE NAME", "WRITE", "FILE SIZE");
   fflush(alloc_log_file_);
 #endif
 
@@ -1495,10 +1495,10 @@ Zone *SubZonedBlockDevice::AllocateZone(Env::WriteLifeTimeHint lifetime,
             (unsigned int)zone_file->GetWriteLifeTimeHint());
     fflush(zone_log_file_);
     //alloc_log
-    fprintf(alloc_log_file_, "%-10ld%-8lu%-45s%-10lu%-10u\n",
-            (long int)((double)clock() / CLOCKS_PER_SEC * 1000),
-            zone->GetZoneNr(), zone_file->GetFilename().c_str(),
-            zone_file->GetFileSize(),zone->GetFreeSpace());
+    fprintf(alloc_log_file_, "%-10ld%-8s%-8d%-8lu%-45s%-10u%-10lu\n",
+            (long int)((double)clock() / CLOCKS_PER_SEC * 1000), "NEW", 0,
+            zone->GetZoneNr(), zone_file->GetFilename().c_str(), 0,
+            zone_file->GetFileSize());
     fflush(alloc_log_file_);
   } else {
     fprintf(zone_log_file_, "%-10ld%-8s%-8lu%-8lu%-45s%-10u%-10lu%-10u\n",
@@ -1507,6 +1507,13 @@ Zone *SubZonedBlockDevice::AllocateZone(Env::WriteLifeTimeHint lifetime,
             zone_file->GetFilename().c_str(), 0, zone_file->GetFileSize(),
             (unsigned int)zone_file->GetWriteLifeTimeHint());
     fflush(zone_log_file_);
+    //alloc_log
+    fprintf(alloc_log_file_, "%-10ld%-8s%-8lu%-8lu%-45s%-10u%-10lu%-10u\n",
+            (long int)((double)clock() / CLOCKS_PER_SEC * 1000), "EXHAUST",
+            before_zone->GetZoneNr(), zone->GetZoneNr(),
+            zone_file->GetFilename().c_str(), 0, zone_file->GetFileSize(),
+            (unsigned int)zone_file->GetWriteLifeTimeHint());
+    fflush(alloc_log_file_);
   }
 #else
   (void)before_zone;
