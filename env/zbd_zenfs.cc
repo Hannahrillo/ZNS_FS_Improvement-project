@@ -609,14 +609,14 @@ IOStatus SubZonedBlockDevice::Open(bool readonly) {
   fflush(zone_log_file_);
 
 //gc_log
-  gc_log_file_ = fopen(sstr_.str().c_str(), "w");
+  gc_log_file_ = fopen(sstr_gc.str().c_str(), "w");
   assert(NULL != gc_log_file_);
 
   fprintf(gc_log_file_, "%-10s%-8s%-8s%-45s%-10s%-10s\n", "TIME(ms)",
            "ZONE(-)", "ZONE(+)", "FILE NAME", "WRITE", "FILE SIZE");
   fflush(gc_log_file_);
 //alloc_log
-  alloc_log_file_ = fopen(sstr_.str().c_str(), "w");
+  alloc_log_file_ = fopen(sstr_alloc.str().c_str(), "w");
   assert(NULL != alloc_log_file_);
 
   fprintf(alloc_log_file_, "%-10s%-8s%-8s%-45s%-10s%-10s\n", "TIME(ms)",
