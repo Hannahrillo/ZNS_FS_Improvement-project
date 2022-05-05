@@ -251,7 +251,10 @@ class SubZonedBlockDevice{
     //gc_log, alloc_log
     FILE *gc_log_file_;
     FILE *alloc_log_file_;
+    //gc_total count
     uint64_t gc_total = 0;
+    //list for gc done zones num
+    std::list<int> gc_done_Zones;
   
     char *gc_buffer_;
 
