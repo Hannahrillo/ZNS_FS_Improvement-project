@@ -1004,7 +1004,6 @@ SubZonedBlockDevice::~SubZonedBlockDevice() {
     //gc_testing..
     fprintf(gc_log_file_, "%-10s%-8lu\n", "TOTAL GC NUM : ", gc_total );
     fflush(gc_log_file_);
-
     fclose(gc_log_file_);
   }
 //alloc_log
@@ -1511,17 +1510,23 @@ Zone *SubZonedBlockDevice::AllocateZone(Env::WriteLifeTimeHint lifetime,
     //alloc_log
     //시간 / zone nr / 파일이름 / free space / gc done
     //gc_done 여부 확인해서 값 바꿔주기.
-    auto it = find(gc_done_Zones.begin(), gc_done_Zones.end(), zone->GetZoneNr());
-    gc_done_Zone = (it != gc_done_Zones.end())? "GC DONE" : "";
+    //auto it = find(gc_done_Zones.begin(), gc_done_Zones.end(), zone->GetZoneNr());
+    //gc_done_Zone = (it != gc_done_Zones.end())? "GC DONE" : "";
     //alloc_log
+    /*
     fprintf(alloc_log_file_, "%-10ld%-8lu%-45s%-10lu%-10s\n",
             (long int)((double)clock() / CLOCKS_PER_SEC * 1000),
             zone->GetZoneNr(), zone_file->GetFilename().c_str(),
             GetFreeSpace(), gc_done_Zone.c_str() );
     fflush(alloc_log_file_);
+    */
+    fprintf(alloc_log_file_, "%-10ld%-8lu%-45s%-10lu\n",
+            (long int)((double)clock() / CLOCKS_PER_SEC * 1000),
+            zone->GetZoneNr(), zone_file->GetFilename().c_str(),
+            GetFreeSpace() );
     //프린트 하고 값 삭제
-    gc_done_Zones.erase(remove(gc_done_Zones.begin(), gc_done_Zones.end(), zone->GetZoneNr()), gc_done_Zones.end());
-    gc_done_Zone = "";
+    //gc_done_Zones.erase(remove(gc_done_Zones.begin(), gc_done_Zones.end(), zone->GetZoneNr()), gc_done_Zones.end());
+    //gc_done_Zone = "";
   } else {
     fprintf(zone_log_file_, "%-10ld%-8s%-8lu%-8lu%-45s%-10u%-10lu%-10u\n",
             (long int)((double)clock() / CLOCKS_PER_SEC * 1000), "EXHAUST",
