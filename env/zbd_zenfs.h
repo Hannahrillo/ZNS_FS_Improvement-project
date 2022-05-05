@@ -251,6 +251,7 @@ class SubZonedBlockDevice{
     //gc_log, alloc_log
     FILE *gc_log_file_;
     FILE *alloc_log_file_;
+    uint64_t gc_total = 0;
   
     char *gc_buffer_;
 
