@@ -547,6 +547,8 @@ IOStatus SubZonedBlockDevice::Open(bool readonly) {
   uint64_t i = 0;
   uint64_t m = 0;
   int ret;
+//gc total num
+  uint64_t gc_total=0;
   std::stringstream sstr;
 //gc_log, alloc_log
   std::stringstream sstr_gc;
@@ -1000,6 +1002,10 @@ SubZonedBlockDevice::~SubZonedBlockDevice() {
   }
 //gc_log
   if (gc_log_file_ != nullptr) {
+    //testing..
+    fprintf(gc_log_file_, "%-10s%-8lu\n", "TOTAL GC NUM : ", gc_total );
+    fflush(gc_log_file_);
+
     fclose(gc_log_file_);
   }
 //alloc_log
