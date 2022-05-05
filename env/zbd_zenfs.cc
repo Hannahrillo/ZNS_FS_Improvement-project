@@ -1496,7 +1496,7 @@ Zone *SubZonedBlockDevice::AllocateZone(Env::WriteLifeTimeHint lifetime,
             (unsigned int)zone_file->GetWriteLifeTimeHint());
     fflush(zone_log_file_);
     //alloc_log
-    fprintf(alloc_log_file_, "%-10ld%-8lu%-45s%-10lu%-10u\n",
+    fprintf(alloc_log_file_, "%-10ld%-8lu%-45s%-10lu%-10lu\n",
             (long int)((double)clock() / CLOCKS_PER_SEC * 1000),
             zone->GetZoneNr(), zone_file->GetFilename().c_str(),
             zone_file->GetFileSize(),GetFreeSpace());
