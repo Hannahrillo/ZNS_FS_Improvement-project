@@ -618,9 +618,9 @@ IOStatus SubZonedBlockDevice::Open(bool readonly) {
 //alloc_log
   alloc_log_file_ = fopen(sstr_alloc.str().c_str(), "w");
   assert(NULL != alloc_log_file_);
-
-  fprintf(alloc_log_file_, "%-10s%-8s%-45s%-10s%-10s\n", "TIME(ms)",
-           "ZONE NR","FILE NAME", "FILE SIZE", "FREE SPACE");
+  //시간 / zone nr / 파일이름 / free space / gc notify
+  fprintf(alloc_log_file_, "%-10s%-8s%-45s%-10s\n", "TIME(ms)",
+           "ZONE NR","FILE NAME","FREE SPACE");
   fflush(alloc_log_file_);
 #endif
 
@@ -911,6 +911,14 @@ void SubZonedBlockDevice::NotifyGarbageCollectionRun() {
             GetNrZones(), GetEmptyZones());
     fflush(zone_log_file_);
   }
+  //gc_log
+  if (gc_force_) {
+    fprintf(gc_log_file_, "%-10ld%-8s%-8u%-8u\n",
+            (long int)((double)clock() / CLOCKS_PER_SEC * 1000), "NOTIFY",
+            GetNrZones(), GetEmptyZones());
+    fflush(gc_log_file_);
+  }
+
 #endif
   gc_force_cond_.notify_all();
 }
@@ -1496,10 +1504,11 @@ Zone *SubZonedBlockDevice::AllocateZone(Env::WriteLifeTimeHint lifetime,
             (unsigned int)zone_file->GetWriteLifeTimeHint());
     fflush(zone_log_file_);
     //alloc_log
-    fprintf(alloc_log_file_, "%-10ld%-8lu%-45s%-10lu%-10lu\n",
+    //시간 / zone nr / 파일이름 / free space / gc notify
+    fprintf(alloc_log_file_, "%-10ld%-8lu%-45s%-10lu\n",
             (long int)((double)clock() / CLOCKS_PER_SEC * 1000),
             zone->GetZoneNr(), zone_file->GetFilename().c_str(),
-            zone_file->GetFileSize(),GetFreeSpace());
+            GetFreeSpace());
     fflush(alloc_log_file_);
   } else {
     fprintf(zone_log_file_, "%-10ld%-8s%-8lu%-8lu%-45s%-10u%-10lu%-10u\n",
