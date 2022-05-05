@@ -720,11 +720,6 @@ void SubZonedBlockDevice::GarbageCollectionThread() {
                 (long int)((double)clock() / CLOCKS_PER_SEC * 1000), "FORCED",
                 GetNrZones(), GetEmptyZones());
         fflush(zone_log_file_);
-//gc_log
-        fprintf(gc_log_file_, "%-10ld%-8s%-8u%-8u\n",
-                (long int)((double)clock() / CLOCKS_PER_SEC * 1000), "FORCED",
-                GetNrZones(), GetEmptyZones());
-        fflush(gc_log_file_);
       }
 #endif
       active_gc_++;
