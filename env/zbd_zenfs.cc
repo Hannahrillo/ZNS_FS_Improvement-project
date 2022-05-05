@@ -523,7 +523,7 @@ SubZonedBlockDevice::SubZonedBlockDevice(std::string bdevname,
     : bdevname_(bdevname),filename_("/dev/" + bdevname), logger_(logger) {
   Info(logger_, "New Zoned Block Device: %s", filename_.c_str());
   zone_log_file_ = nullptr;
-//gc_log, alloc_log
+  //gc_log, alloc_log
   gc_log_file_ = nullptr;
   alloc_log_file_ = nullptr;
 
@@ -548,7 +548,7 @@ IOStatus SubZonedBlockDevice::Open(bool readonly) {
   uint64_t m = 0;
   int ret;
   std::stringstream sstr;
-//gc_log, alloc_log
+  //gc_log, alloc_log
   std::stringstream sstr_gc;
   std::stringstream sstr_alloc;
 
@@ -608,7 +608,7 @@ IOStatus SubZonedBlockDevice::Open(bool readonly) {
           "LEVEL");
   fflush(zone_log_file_);
 
-//gc_log
+  //gc_log
   gc_log_file_ = fopen(sstr_gc.str().c_str(), "w");
   assert(NULL != gc_log_file_);
 
@@ -1495,7 +1495,7 @@ Zone *SubZonedBlockDevice::AllocateZone(Env::WriteLifeTimeHint lifetime,
             zone_file->GetFileSize(),
             (unsigned int)zone_file->GetWriteLifeTimeHint());
     fflush(zone_log_file_);
-    //alloc_log
+ //alloc_log
     fprintf(alloc_log_file_, "%-10ld%-8s%-8d%-8lu%-45s%-10u%-10lu\n",
             (long int)((double)clock() / CLOCKS_PER_SEC * 1000), "NEW", 0,
             zone->GetZoneNr(), zone_file->GetFilename().c_str(), 0,
