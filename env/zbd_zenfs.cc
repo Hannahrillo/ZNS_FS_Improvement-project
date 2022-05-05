@@ -526,9 +526,6 @@ SubZonedBlockDevice::SubZonedBlockDevice(std::string bdevname,
 //gc_log, alloc_log
   gc_log_file_ = nullptr;
   alloc_log_file_ = nullptr;
-//gc total num
-//gc_testing
-  uint64_t gc_total=0;
 
 #ifndef INDEPENDENT_GC_THREAD
   files_mtx_ = nullptr;
@@ -862,6 +859,7 @@ uint32_t SubZonedBlockDevice::GarbageCollection(
                 (long int)((double)clock() / CLOCKS_PER_SEC * 1000), "GC_End",
                 victim->GetZoneNr());
         fflush(gc_log_file_);
+        gc_total++;
       }
 #endif
     }  // victim zone processing loop
