@@ -255,7 +255,7 @@ class SubZonedBlockDevice{
     uint64_t gc_total = 0;
     //list for gc done zones num
     std::vector<int> gc_done_Zones;
-    bool gc_done_Zone;
+    std::string gc_done_Zone;
   
     char *gc_buffer_;
 
