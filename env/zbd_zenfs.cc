@@ -1512,7 +1512,7 @@ Zone *SubZonedBlockDevice::AllocateZone(Env::WriteLifeTimeHint lifetime,
     //시간 / zone nr / 파일이름 / free space / gc done
     //gc_done 여부 확인해서 값 바꿔주기.
     auto it = find(gc_done_Zones.begin(), gc_done_Zones.end(), zone->GetZoneNr());
-    gc_done_Zone = (it =! gc_done_Zones.end())? "GC DONE" : "";
+    gc_done_Zone = (it != gc_done_Zones.end())? "GC DONE" : "";
     //alloc_log
     fprintf(alloc_log_file_, "%-10ld%-8lu%-45s%-10lu%-10s\n",
             (long int)((double)clock() / CLOCKS_PER_SEC * 1000),
